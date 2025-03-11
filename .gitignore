@@ -1,0 +1,34 @@
+# Node.js dependencies
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Environment variables
+.env
+
+# Logs
+logs/
+*.log
+npm-debug.log
+yarn-debug.log
+lerna-debug.log
+.log
+debug.log
+
+# Editor/IDE files
+.vscode/
+.idea/
+.DS_Store
+*.swp
+*.swo
+
+# Build files
+dist/
+build/
+coverage/
+.cache/
+
+# Apollo GraphQL
+.graphqlrc
+.apollo/
