@@ -18,9 +18,16 @@ sudo systemctl enable docker
 # 4️⃣ Add current user to Docker group (avoids using `sudo` for Docker commands)
 sudo usermod -aG docker $USER
 
-# 5️⃣ Install Docker Compose
+sleep 5
+
+newgrp docker
+
+
+# 5️⃣ Install Docker Compose (Manually)
 echo "🚀 Installing Docker Compose..."
-sudo dnf install -y docker-compose-plugin
+DOCKER_COMPOSE_VERSION=$(curl -s https://api.github.com/repos/docker/compose/releases/latest | grep -Po '"tag_name": "\K[^"]+')
+sudo curl -L "https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+sudo chmod +x /usr/local/bin/docker-compose
 
 # 6️⃣ Install Git
 echo "🚀 Installing Git..."
@@ -37,15 +44,15 @@ docker pull vips26/graphqlwithmongodb:latest
 
 # 9️⃣ Run the app using Docker Compose
 echo "🚀 Starting the application using Docker Compose..."
-docker compose down
-docker compose up -d
+docker-compose down
+docker-compose up -d
 
 # 🔟 Verify running containers
 echo "✅ Running Docker Containers:"
 docker ps
 
 echo "🚀 Application deployment completed successfully!"
-echo "📌 To check logs, run: docker compose logs -f"
-echo "📌 To stop the app, run: docker compose down"
+echo "📌 To check logs, run: docker-compose logs -f"
+echo "📌 To stop the app, run: docker-compose down"
 
 echo "⚠️ Please log out and log back in for the Docker group changes to take effect."
