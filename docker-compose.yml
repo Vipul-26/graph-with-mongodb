@@ -1,23 +1,54 @@
-version: '3.8'
+# Define services (containers)
 services:
   app:
+    # Build the app container from the Dockerfile in the current directory
     build: .
+    
+    # Map port 4000 from the container to the host machine
     ports:
-      - "4000:4000"
-    environment:
-      - NODE_ENV=production
-      - PORT=4000
-      - MONGO_URI=mongodb://mongo:27017/graphql_db
-      - JWT_SECRET=your-secret-key
+      - "${PORT}:${PORT}"  # Uses PORT from .env file
+
+    # Load environment variables from .env file (Best Practice)
+    env_file:
+      - .env  # Loads variables from .env
+
+    # Ensure MongoDB starts before running the app
     depends_on:
-      - mongo
+      mongo:
+        condition: service_healthy  # Wait until MongoDB is ready
+
+    # Restart the container automatically if it crashes or stops unexpectedly
+    restart: unless-stopped
+
+    # Log rotation to prevent unlimited log growth
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"  # Max size of each log file (10MB)
+        max-file: "3"  # Keep the last 3 log files
 
   mongo:
+    # Use the official MongoDB image from Docker Hub
     image: mongo:latest
+
+    # Expose the MongoDB default port 27017
     ports:
-      - "27017:27017"
+      - "${MONGO_PORT}:${MONGO_PORT}"  # Uses MONGO_PORT from .env
+
+    # Create a persistent volume to store MongoDB data (prevents data loss)
     volumes:
       - mongo-data:/data/db
 
+    # Restart MongoDB automatically if it stops or crashes
+    restart: unless-stopped
+
+    # Health check to ensure MongoDB is running before the app starts
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 10s  # Check every 10 seconds
+      timeout: 5s  # Timeout after 5 seconds
+      retries: 3  # Try 3 times before marking it as unhealthy
+
+# Define named volumes for persistent data storage
 volumes:
   mongo-data:

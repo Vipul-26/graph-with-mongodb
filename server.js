@@ -31,6 +31,7 @@ const server = new ApolloServer({
   schema,
   introspection: true, // Enable introspection
   playground: true, // Enable GraphQL Playground
+  persistedQueries: false, // Disable persisted queries completely
   context: ({ req }) => {
     try {
       return authMiddleware(req); // Pass request through authMiddleware

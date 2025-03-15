@@ -1,34 +1,41 @@
-# Use an official Node.js runtime as the base image
+# ======= 1️⃣ Builder Stage: Install Dependencies =======
 FROM node:18-alpine AS builder
 
-# Set working directory inside the container
+# Set working directory
 WORKDIR /app
 
-# Copy package.json and package-lock.json (if it exists) to install dependencies
+# Copy only package.json and package-lock.json first (leverages Docker cache)
 COPY package*.json ./
 
-# Install dependencies
-RUN npm install --production --no-strict-ssl
+# Install only production dependencies
+RUN npm install --production
 
 # Copy the rest of the application code
 COPY . .
 
-# Stage 2: Create a lightweight production image
+# ======= 2️⃣ Final Production Image =======
 FROM node:18-alpine
 
 # Set working directory
 WORKDIR /app
 
-# Copy only the necessary files from the builder stage
+# Copy only necessary files from the builder stage
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app .
 
-# Expose the port your GraphQL server runs on (default is 4000 for Apollo Server)
+# Expose GraphQL API Port
 EXPOSE 4000
 
-# Environment variables (can be overridden via docker-compose or runtime)
-ENV NODE_ENV=production
-ENV PORT=4000
+# Load environment variables from the .env file
+# This ensures the application picks up values dynamically at runtime
+ENV NODE_ENV=${NODE_ENV}
+ENV PORT=${PORT}
+ENV MONGO_URI=${MONGO_URI}
+ENV JWT_SECRET=${JWT_SECRET}
 
-# Command to start the application
-CMD ["npm", "start"]
+# Ensure the container runs as a non-root user for security
+RUN addgroup -S appgroup && adduser -S appuser -G appgroup
+USER appuser
+
+# Start the GraphQL server
+CMD ["node", "server.js"]
