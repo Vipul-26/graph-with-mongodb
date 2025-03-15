@@ -6,7 +6,7 @@ services:
     
     # Map port 4000 from the container to the host machine
     ports:
-      - 4000:4000  # Uses PORT from .env file
+      - "${PORT}:${PORT}"  # Uses PORT from .env file
 
     # Load environment variables from .env file (Best Practice)
     env_file:
@@ -33,7 +33,7 @@ services:
 
     # Expose the MongoDB default port 27017
     ports:
-      - 27017:27017
+      - "${MONGO_PORT}:${MONGO_PORT}"  # Uses MONGO_PORT from .env
 
     # Create a persistent volume to store MongoDB data (prevents data loss)
     volumes:
