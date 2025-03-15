@@ -20,7 +20,7 @@ sudo usermod -aG docker $USER
 
 sleep 5
 
-newgrp docker
+# newgrp docker
 
 
 # 5️⃣ Install Docker Compose (Manually)
