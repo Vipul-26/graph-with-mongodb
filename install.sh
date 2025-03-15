@@ -39,7 +39,7 @@ docker pull vips26/graphqlwithmongodb:latest
 
 # 9️⃣ Run the app using Docker Compose
 echo "🚀 Starting the application using Docker Compose..."
-docker compose down;
+docker-compose down;
 docker-compose up -d;
 
 # 🔟 Verify running containers
