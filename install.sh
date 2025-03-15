@@ -28,10 +28,10 @@ sudo chmod +x /usr/local/bin/docker-compose
 echo "🚀 Installing Git..."
 sudo yum install -y git
 
-# 7️⃣ Clone the GitHub repository
-echo "🚀 Cloning the GitHub repository..."
-git clone https://github.com/Vipul-26/graph-with-mongodb.git
-cd graph-with-mongodb
+# # 7️⃣ Clone the GitHub repository
+# echo "🚀 Cloning the GitHub repository..."
+# git clone https://github.com/Vipul-26/graph-with-mongodb.git
+# cd graph-with-mongodb
 
 # 8️⃣ Pull the Docker image from Docker Hub
 echo "🚀 Pulling the latest Docker image from Docker Hub..."
